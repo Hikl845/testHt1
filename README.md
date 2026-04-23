@@ -25,7 +25,7 @@ cd <name>
 ## Приклади роботи
 
 ### Головне меню
-![Main menu](screenshots/menu.png)
+![Main menu]([screenshots/menu.png](https://github.com/Hikl845/testHt1/blob/main/screenshots/Screenshot%20from%202026-04-23%2006-09-30.png))
 
 ### Ігровий процес
 ![Gameplay](screenshots/game.png)
