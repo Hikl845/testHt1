@@ -29,7 +29,7 @@ cd <name>
 
 ### Ігровий процес
 ![Gameplay](screenshots/user-turn.png)
-![Gameplay]()
+![Gameplay](screenshots/computer-answer.png)
 ![Gameplay]()
 ![Gameplay]()
 ![Gameplay]()
