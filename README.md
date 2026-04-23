@@ -32,6 +32,7 @@ cd <name>
 
 ### Вікно перемоги / поразки
 ![Win](screenshots/win-screen.png)
+![loose](screenshots/lose-screen.png)
 
 ## Що зробив я
 
