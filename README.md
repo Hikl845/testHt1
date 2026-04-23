@@ -28,7 +28,11 @@ cd <name>
 ![Main menu](screenshots/welcome.png)
 
 ### Ігровий процес
-![Gameplay](screenshots/game.png)
+![Gameplay](screenshots/user-turn.png)
+![Gameplay]()
+![Gameplay]()
+![Gameplay]()
+![Gameplay]()
 
 ### Вікно перемоги / поразки
 ![Win](screenshots/win-screen.png)
