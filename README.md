@@ -31,7 +31,7 @@ cd <name>
 ![Gameplay](screenshots/game.png)
 
 ### Вікно перемоги / поразки
-![Result](screenshots/result.png)
+![Win](screenshots/win-screen.png)
 
 ## Що зробив я
 
