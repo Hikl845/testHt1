@@ -10,7 +10,7 @@ public class GameWindow extends JFrame {
     private JLabel scoreLabel;
     private JLabel bestScoreLabel;
 
-    private final GameLogic gameLogic;
+    private GameLogic gameLogic;
 
     public GameWindow() {
         setTitle("Міста");
@@ -26,88 +26,82 @@ public class GameWindow extends JFrame {
     private void initUI() {
         setLayout(new BorderLayout());
 
-        JPanel topPanel = new JPanel(new GridLayout(2, 1));
-        topPanel.add(new JLabel("Введіть назву міста:", SwingConstants.CENTER));
+        JPanel top = new JPanel(new GridLayout(2, 1));
+        top.add(new JLabel("Введіть назву міста:", SwingConstants.CENTER));
 
         inputField = new JTextField();
-        topPanel.add(inputField);
+        top.add(inputField);
+        add(top, BorderLayout.NORTH);
 
-        add(topPanel, BorderLayout.NORTH);
-
-        JPanel centerPanel = new JPanel(new GridLayout(2, 1));
-
+        JPanel center = new JPanel(new GridLayout(2, 1));
         computerLabel = new JLabel("Комп'ютер: ", SwingConstants.CENTER);
         scoreLabel = new JLabel("Рахунок: 0", SwingConstants.CENTER);
 
-        centerPanel.add(computerLabel);
-        centerPanel.add(scoreLabel);
+        center.add(computerLabel);
+        center.add(scoreLabel);
+        add(center, BorderLayout.CENTER);
 
-        add(centerPanel, BorderLayout.CENTER);
+        JPanel bottom = new JPanel(new FlowLayout());
 
-        JPanel bottomPanel = new JPanel(new FlowLayout());
-
-        JButton moveButton = new JButton("Хід");
-        JButton giveUpButton = new JButton("Здаюсь");
-        JButton resetButton = new JButton("Нова гра");
+        JButton move = new JButton("Хід");
+        JButton giveUp = new JButton("Здаюсь");
+        JButton reset = new JButton("Нова гра");
 
         bestScoreLabel = new JLabel("Рекорд: 0");
 
-        bottomPanel.add(moveButton);
-        bottomPanel.add(giveUpButton);
-        bottomPanel.add(resetButton);
-        bottomPanel.add(bestScoreLabel);
+        bottom.add(move);
+        bottom.add(giveUp);
+        bottom.add(reset);
+        bottom.add(bestScoreLabel);
 
-        add(bottomPanel, BorderLayout.SOUTH);
-
+        add(bottom, BorderLayout.SOUTH);
 
         inputField.addActionListener(e -> handleMove());
-
-        moveButton.addActionListener(e -> handleMove());
-        giveUpButton.addActionListener(e -> handleGiveUp());
-        resetButton.addActionListener(e -> resetGame());
+        move.addActionListener(e -> handleMove());
+        giveUp.addActionListener(e -> handleGiveUp());
+        reset.addActionListener(e -> resetGame());
     }
 
     private void handleMove() {
+        if (gameLogic.isGameOver()) return;
+
         String input = inputField.getText();
 
         if (input.equalsIgnoreCase("здаюсь")) {
             handleGiveUp();
-            inputField.setText("");
             return;
         }
 
+        MoveResult result = gameLogic.processUserMove(input);
 
-        String result = gameLogic.processUserMove(input);
+        switch (result.getType()) {
+            case INVALID -> show("Неправильне місто");
 
-        switch (result) {
-            case "INVALID" -> JOptionPane.showMessageDialog(this, "Неправильне місто!");
+            case USED -> show("Місто вже було");
 
-            case "USED" -> JOptionPane.showMessageDialog(this, "Місто вже було!");
+            case INVALID_LETTER -> show("Потрібно місто на літеру: " + result.getExpectedLetter());
 
-            case "WIN" -> {
+            case WIN -> {
                 gameLogic.updateBestScore();
-
-                JOptionPane.showMessageDialog(this,
-                        "Ти виграв 🎉\nРахунок: " + gameLogic.getScore());
-
+                show("Ти виграв 🎉\nРахунок: " + gameLogic.getScore());
                 bestScoreLabel.setText("Рекорд: " + gameLogic.getBestScore());
             }
 
-            default -> {
-                computerLabel.setText("Комп'ютер: " + result);
+            case SUCCESS -> {
+                computerLabel.setText("Комп'ютер: " + result.getCity());
                 scoreLabel.setText("Рахунок: " + gameLogic.getScore());
             }
         }
 
-        inputField.setText(""); // ✅ очищення завжди
+        inputField.setText("");
     }
 
     private void handleGiveUp() {
+        if (gameLogic.isGameOver()) return;
+
         gameLogic.updateBestScore();
 
-        JOptionPane.showMessageDialog(this,
-                "Ти програв 😢\nРахунок: " + gameLogic.getScore());
-
+        show("Ти програв 😢\nРахунок: " + gameLogic.getScore());
         bestScoreLabel.setText("Рекорд: " + gameLogic.getBestScore());
     }
 
@@ -117,5 +111,9 @@ public class GameWindow extends JFrame {
         computerLabel.setText("Комп'ютер: ");
         scoreLabel.setText("Рахунок: 0");
         inputField.setText("");
+    }
+
+    private void show(String msg) {
+        JOptionPane.showMessageDialog(this, msg);
     }
 }

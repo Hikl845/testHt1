@@ -11,15 +11,25 @@ public class GameLogic {
     private int score = 0;
     private int bestScore = 0;
 
-    public String processUserMove(String userCity) {
-        userCity = userCity.trim();
+    private Character expectedLetter = null;
+    private boolean gameOver = false;
+
+    public MoveResult processUserMove(String userCity) {
+        if (gameOver) return MoveResult.win();
+
+        userCity = normalize(userCity);
 
         if (userCity.isEmpty() || !cityStorage.exists(userCity)) {
-            return "INVALID";
+            return MoveResult.invalid();
         }
 
         if (usedCities.contains(userCity)) {
-            return "USED";
+            return MoveResult.used();
+        }
+
+        if (expectedLetter != null &&
+                !userCity.startsWith(String.valueOf(expectedLetter))) {
+            return MoveResult.invalidLetter(expectedLetter);
         }
 
         usedCities.add(userCity);
@@ -30,41 +40,41 @@ public class GameLogic {
         String response = cityStorage.findByLetter(lastChar, usedCities);
 
         if (response == null) {
-            return "WIN";
+            gameOver = true;
+            return MoveResult.win();
         }
 
         usedCities.add(response);
-        return response;
+
+        expectedLetter = getLastChar(response);
+
+        return MoveResult.success(response);
     }
 
-    public int getScore() {
-        return score;
-    }
-
-    public int getBestScore() {
-        return bestScore;
-    }
+    public int getScore() { return score; }
+    public int getBestScore() { return bestScore; }
+    public boolean isGameOver() { return gameOver; }
 
     public void updateBestScore() {
-        if (score > bestScore) {
-            bestScore = score;
-        }
+        if (score > bestScore) bestScore = score;
     }
 
     public void resetGame() {
         usedCities.clear();
         score = 0;
+        expectedLetter = null;
+        gameOver = false;
+    }
+
+    private String normalize(String input) {
+        return input.trim().toLowerCase();
     }
 
     private char getLastChar(String word) {
-        String lower = word.toLowerCase();
-
-        for (int i = lower.length() - 1; i >= 0; i--) {
-            char c = lower.charAt(i);
-            if ("ьйы".indexOf(c) == -1) {
-                return c;
-            }
+        for (int i = word.length() - 1; i >= 0; i--) {
+            char c = word.charAt(i);
+            if ("ьйы".indexOf(c) == -1) return c;
         }
-        return lower.charAt(lower.length() - 1);
+        return word.charAt(word.length() - 1);
     }
 }
