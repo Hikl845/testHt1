@@ -31,7 +31,7 @@ cd <name>
 ![Gameplay](screenshots/first-screen-of-game.png)
 ![Gameplay](screenshots/user-turn.png)
 ![Gameplay](screenshots/computer-answer.png)
-![Gameplay]()
+![Gameplay](screenshots/if-gamer-write-city-that-have-been-used.png)
 ![Gameplay]()
 
 ### Вікно перемоги / поразки
