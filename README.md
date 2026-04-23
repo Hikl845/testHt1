@@ -32,7 +32,7 @@ cd <name>
 ![Gameplay](screenshots/user-turn.png)
 ![Gameplay](screenshots/computer-answer.png)
 ![Gameplay](screenshots/if-gamer-write-city-that-have-been-used.png)
-![Gameplay]()
+![Gameplay](screenshots/city-doesn't-exsist-or-not-in-file.png)
 
 ### Вікно перемоги / поразки
 ![Win](screenshots/win-screen.png)
