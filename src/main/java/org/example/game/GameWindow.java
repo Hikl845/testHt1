@@ -63,7 +63,9 @@ public class GameWindow extends JFrame {
     }
 
     private void handleMove() {
-        if (gameLogic.isGameOver()) return;
+        if (gameLogic.isGameOver()) {
+            return;
+        }
 
         String input = inputField.getText();
 
@@ -79,7 +81,8 @@ public class GameWindow extends JFrame {
 
             case USED -> show("Місто вже було");
 
-            case INVALID_LETTER -> show("Потрібно місто на літеру: " + result.getExpectedLetter());
+            case INVALID_LETTER ->
+                    show("Потрібно місто на літеру: " + result.getExpectedLetter());
 
             case WIN -> {
                 gameLogic.updateBestScore();
@@ -97,10 +100,11 @@ public class GameWindow extends JFrame {
     }
 
     private void handleGiveUp() {
-        if (gameLogic.isGameOver()) return;
+        if (gameLogic.isGameOver()) {
+            return;
+        }
 
         gameLogic.updateBestScore();
-
         show("Ти програв 😢\nРахунок: " + gameLogic.getScore());
         bestScoreLabel.setText("Рекорд: " + gameLogic.getBestScore());
     }

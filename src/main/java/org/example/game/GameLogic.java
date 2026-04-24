@@ -15,7 +15,9 @@ public class GameLogic {
     private boolean gameOver = false;
 
     public MoveResult processUserMove(String userCity) {
-        if (gameOver) return MoveResult.win();
+        if (gameOver) {
+            return MoveResult.win();
+        }
 
         userCity = normalize(userCity);
 
@@ -37,7 +39,7 @@ public class GameLogic {
 
         char lastChar = getLastChar(userCity);
 
-        String response = cityStorage.findByLetter(lastChar, usedCities);
+        String response = findCity(lastChar);
 
         if (response == null) {
             gameOver = true;
@@ -45,18 +47,36 @@ public class GameLogic {
         }
 
         usedCities.add(response);
-
         expectedLetter = getLastChar(response);
 
         return MoveResult.success(response);
     }
 
-    public int getScore() { return score; }
-    public int getBestScore() { return bestScore; }
-    public boolean isGameOver() { return gameOver; }
+    private String findCity(char letter) {
+        for (String city : cityStorage.getCitiesByLetter(letter)) {
+            if (!usedCities.contains(city)) {
+                return city;
+            }
+        }
+        return null;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public int getBestScore() {
+        return bestScore;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
 
     public void updateBestScore() {
-        if (score > bestScore) bestScore = score;
+        if (score > bestScore) {
+            bestScore = score;
+        }
     }
 
     public void resetGame() {
@@ -73,7 +93,9 @@ public class GameLogic {
     private char getLastChar(String word) {
         for (int i = word.length() - 1; i >= 0; i--) {
             char c = word.charAt(i);
-            if ("ьйы".indexOf(c) == -1) return c;
+            if ("ьйи".indexOf(c) == -1) {
+                return c;
+            }
         }
         return word.charAt(word.length() - 1);
     }

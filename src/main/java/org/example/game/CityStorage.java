@@ -1,12 +1,12 @@
 package org.example.game;
 
 import java.io.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class CityStorage {
 
-    private Set<String> cities = new HashSet<>();
+    private Map<Character, Set<String>> citiesByLetter = new HashMap<>();
+    private Set<String> allCities = new HashSet<>();
 
     public CityStorage() {
         loadCities();
@@ -19,10 +19,17 @@ public class CityStorage {
                 )
         )) {
             reader.lines()
+                    .filter(line -> !line.isBlank()) // 🔥 першим
                     .map(String::trim)
                     .map(String::toLowerCase)
-                    .filter(s -> !s.isEmpty())
-                    .forEach(cities::add);
+                    .forEach(city -> {
+                        allCities.add(city);
+
+                        char first = city.charAt(0);
+                        citiesByLetter
+                                .computeIfAbsent(first, k -> new HashSet<>())
+                                .add(city);
+                    });
 
         } catch (IOException e) {
             throw new RuntimeException("Помилка читання cities.txt", e);
@@ -30,15 +37,10 @@ public class CityStorage {
     }
 
     public boolean exists(String city) {
-        return cities.contains(city.toLowerCase());
+        return allCities.contains(city.toLowerCase());
     }
 
-    public String findByLetter(char letter, Set<String> used) {
-        for (String city : cities) {
-            if (!used.contains(city) && city.startsWith(String.valueOf(letter))) {
-                return city;
-            }
-        }
-        return null;
+    public Set<String> getCitiesByLetter(char letter) {
+        return citiesByLetter.getOrDefault(letter, Set.of());
     }
 }
